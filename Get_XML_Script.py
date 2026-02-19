@@ -11,6 +11,7 @@ file_number = 396643 #starting file # for Gentoo
 #file_number = 739078 #starting file # for SUSE
 #file_prefix = 'KDE'
 file_prefix = 'Gentoo'
+#file_prefix = 'SUSE'
 try:
     os.mkdir(file_prefix)
     print(f"Directory '{file_prefix}' created.")
@@ -51,8 +52,10 @@ while run_loop:
         if file_number > 515900: #ending number for KDE
             run_loop = False 
         '''
+        
         if file_number > 969900: #ending number for Gentoo
             run_loop = False
+        
         '''
         if file_number > 1258020: #ending number for SUSE
             run_loop = False 

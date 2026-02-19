@@ -11,27 +11,38 @@ file_number = 396643 #starting file # for Gentoo
 #file_number = 739078 #starting file # for SUSE
 #file_prefix = 'KDE'
 file_prefix = 'Gentoo'
+try:
+    os.mkdir(file_prefix)
+    print(f"Directory '{file_prefix}' created.")
+except FileExistsError:
+    print(f"Directory '{file_prefix}' already exists.")
 #file_prefix = 'SUSE'
-with open ("invalidbugs.txt", "r") as text_file:
-    invalid_bugs = text_file.read().split(',')
+if not os.path.isfile("invalidbugs.txt"):
+    with open("invalidbugs.txt", "a+") as text_file:
+        text_file.write(file_prefix+"Bug1.xml")
+    invalid_bugs = []
+else:
+    with open ("invalidbugs.txt", "r") as text_file:
+        invalid_bugs = text_file.read().split(',')
 while run_loop:
     print('Downloading bug #' + str(file_number) + '.')
     #url = 'https://bugs.kde.org/show_bug.cgi?ctype=xml&id=' + str(file_number) #url to use when downloading KDE
     url = 'https://bugs.gentoo.org/show_bug.cgi?ctype=xml&id=' + str(file_number) #url to use when downloading from Gentoo
     #url = 'https://bugzilla.suse.com/show_bug.cgi?ctype=xml&id=' + str(file_number) #url to use when downloading from SUSE
-    if (not os.path.isfile(file_prefix+'Bug'+str(file_number)+'.xml')) and ((file_prefix+'Bug'+str(file_number)+".xml") not in invalid_bugs):
-        filename = wget.download(url, file_prefix+'Bug'+str(file_number)+'.xml', bar=None)
+    invalid_name = file_prefix + 'Bug' + str(file_number) + '.xml'
+    if (not os.path.isfile(file_prefix+"/"+file_prefix+'Bug'+str(file_number)+'.xml')) and (invalid_name not in invalid_bugs):
+        filename = wget.download(url, file_prefix+'/'+file_prefix+'Bug'+str(file_number)+'.xml', bar=None)
         tree = ET.parse(filename)
         root = tree.getroot()
         if root[0][0] is None:
             print('Invalid bug, will delete.')
             with open("invalidbugs.txt", "a") as f:
-                f.write(","+filename)
+                f.write(","+invalid_name)
             os.remove(filename)
         elif root[0].attrib == {'error': 'InvalidBugId'}:
             print('Invalid bug, will delete.')
             with open("invalidbugs.txt", "a") as f:
-                f.write(","+filename)
+                f.write(","+invalid_name)
             os.remove(filename)
         else:
             print('Valid bug downloaded.')

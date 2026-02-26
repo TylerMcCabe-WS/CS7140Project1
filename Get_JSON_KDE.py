@@ -35,5 +35,5 @@ while i < 516516:
             json.dump(data, f, indent=4)
         time.sleep(1)
     else:
-        i+=gap
         print("Bugs "+str(i)+"-"+str(i+gap+1)+ " already downloaded.")
+        i+=gap+2
